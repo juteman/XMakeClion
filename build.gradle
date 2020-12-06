@@ -7,8 +7,6 @@ group 'juteman'
 version '1.0-SNAPSHOT'
 
 repositories {
-    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-    maven{ url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
     mavenCentral()
 }
 
@@ -20,7 +18,10 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     version '2020.3'
+    type 'CL'
+    downloadSources false
 }
+
 patchPluginXml {
     changeNotes """
       Add change notes here.<br>

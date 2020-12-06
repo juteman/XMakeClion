@@ -28,13 +28,22 @@ A XMake integration plugin in Intellij Platform<br>
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
+
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.clion</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
+        <toolWindow id="XMake" factoryClass="toolWindow.XMakeToolWindowFactory"/>
     </extensions>
 
     <actions>
         <!-- Add your actions here -->
+        <action id="action.BuildAction" class="action.BuildAction" text="Build Project"
+                description="Build the current project.">
+            <override-text place="MainMenu" text="XMake Build"/>
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </action>>
     </actions>
 </idea-plugin>
