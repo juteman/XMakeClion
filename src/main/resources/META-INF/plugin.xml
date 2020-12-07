@@ -31,19 +31,17 @@ A XMake integration plugin in Intellij Platform<br>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
-    <depends>com.intellij.modules.clion</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <toolWindow id="XMake" factoryClass="toolWindow.XMakeToolWindowFactory"/>
+        <toolWindow id="XMake" icon="XMakeIcons.xmake" factoryClass="toolWindow.XMakeToolWindowFactory"/>
     </extensions>
 
     <actions>
-        <!-- Add your actions here -->
-        <action id="action.BuildAction" class="action.BuildAction" text="Build Project"
-                description="Build the current project.">
-            <override-text place="MainMenu" text="XMake Build"/>
-            <add-to-group group-id="ToolsMenu" anchor="first"/>
-        </action>>
+        <group id="XMake.Menu" text="XMake" popup="true" description="XMake menu">
+            <add-to-group group-id="MainMenu" anchor="after" relative-to-action="RunMenu"/>
+            <action id="XMake.Build" class="action.BuildAction" text="Build Project" icon="ActionIcons.build"
+                    description="Build the current project."/>
+        </group>
     </actions>
 </idea-plugin>
