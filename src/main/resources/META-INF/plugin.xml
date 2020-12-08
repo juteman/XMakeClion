@@ -28,13 +28,13 @@ A XMake integration plugin in Intellij Platform<br>
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
-
-    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.clion.ide</depends>
     <depends>com.intellij.modules.lang</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <toolWindow id="XMake" icon="XMakeIcons.xmake" factoryClass="toolWindow.XMakeToolWindowFactory"/>
+        <configurationType implementation="configuration.XMakeRunConfigurationType"/>
     </extensions>
 
     <actions>

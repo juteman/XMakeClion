@@ -7,11 +7,12 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
+import org.jetbrains.annotations.NotNull;
 
 public class XMakeToolWindowOutputPanel extends SimpleToolWindowPanel{
 
-    private ActionToolbar actionToolbar;
-    private ConsoleView consoleView;
+    private final ActionToolbar actionToolbar;
+    private final ConsoleView consoleView;
 
     public XMakeToolWindowOutputPanel(Project project) {
         super(false);
@@ -30,6 +31,7 @@ public class XMakeToolWindowOutputPanel extends SimpleToolWindowPanel{
         setContent(consoleView.getComponent());
     }
 
+    @NotNull
     public  ConsoleView getConsoleView() {
         return consoleView;
     }
