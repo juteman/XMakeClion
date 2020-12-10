@@ -1,41 +1,41 @@
 package configuration;
 
 import com.intellij.execution.configuration.EnvironmentVariablesComponent;
+import com.intellij.execution.configuration.EnvironmentVariablesData;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.ui.layout.CCFlags;
+import com.intellij.ui.components.JBLabel;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.ui.RawCommandLineEditor;
+import org.jetbrains.annotations.Nullable;
 import service.XMakeService;
 
+import javax.swing.JPanel;
 import javax.swing.*;
 
 public class XMakeSettingsEditor extends SettingsEditor<XMakeRunConfiguration> {
 
-    private final DefaultComboBoxModel<String> targetsModel;
-    private final RawCommandLineEditor runArguments;
-    private final EnvironmentVariablesComponent environmentVariables;
+    private DefaultComboBoxModel<String> targetsModel;
+    private RawCommandLineEditor runArguments;
+    private EnvironmentVariablesComponent environmentVariables;
     private Project project;
     private JPanel xmakePanel;
+    private JBLabel targetLabel;
     private ComboBox<String> targetsComboBox;
+    private XMakeService xmakeService;
 
-    public XMakeSettingsEditor(Project inProject)
-    {
+    public XMakeSettingsEditor(Project inProject) {
         super();
         project = inProject;
-        targetsModel = new DefaultComboBoxModel<>();
-        runArguments =  new RawCommandLineEditor();
-        environmentVariables = new EnvironmentVariablesComponent();
-
+        xmakeService = XMakeService.getInstance(project);
     }
 
 
     @Override
     protected void resetEditorFrom(@NotNull XMakeRunConfiguration configuration) {
         targetsModel.removeAllElements();
-        var xmakeService = XMakeService.getXMakeService(project);
         for (var target : xmakeService.getTargets()) {
             targetsModel.addElement(target);
         }
@@ -63,11 +63,11 @@ public class XMakeSettingsEditor extends SettingsEditor<XMakeRunConfiguration> {
 
 
     private void createUIComponents() {
+
         // TODO: place custom component creation code here
-        var xmakeService = XMakeService.getXMakeService(project);
-        for (var target : xmakeService.getTargets()) {
-            targetsModel.addElement(target);
-        }
+        targetsModel = new DefaultComboBoxModel<>();
         targetsComboBox = new ComboBox<>(targetsModel);
     }
+
+
 }

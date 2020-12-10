@@ -33,6 +33,7 @@ A XMake integration plugin in Intellij Platform<br>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
+        <projectService serviceImplementation="service.XMakeService"/>
         <toolWindow id="XMake" icon="XMakeIcons.xmake" factoryClass="toolWindow.XMakeToolWindowFactory"/>
         <configurationType implementation="configuration.XMakeRunConfigurationType"/>
     </extensions>

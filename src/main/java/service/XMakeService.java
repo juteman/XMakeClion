@@ -4,7 +4,9 @@ package service;
 import com.intellij.execution.configuration.EnvironmentVariablesData;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,22 +18,36 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@State(name = "XMakeProjectSetting")
+@State(name = "XMakeProjectSetting", storages = {@com.intellij.openapi.components.Storage("$WORKSPACE_FILE$")})
 public class XMakeService implements PersistentStateComponent<XMakeService.State> {
+
+    static class State {
+        public String currentPlatform = XMakeUtils.getPlatform();
+        public String currentArchitecture = "";
+        public String currentMode = "release";
+        public String workingDirectory = "";
+        public String androidNDKDirectory = "";
+        public String buildOutputDirectory = "";
+        public boolean verboseOutput = false;
+        public String additionalConfiguration = "";
+    }
 
     private final Project project;
     private final List<String> platforms;
     private final List<String> architectures;
     private final List<String> modes;
     private GeneralCommandLine buildCommandLine;
-    private State data;
+    private boolean isChanged;
+    State data = new State();
+
 
     public XMakeService(Project inProject) {
         project = inProject;
         platforms = Arrays.asList("macosx", "linux", "windows", "android", "iphoneos", "watchos", "mingw");
         modes = Arrays.asList("release", "debug");
-        data = new State();
         architectures = getArchitecturesByPlatform(data.currentPlatform);
+        isChanged = false;
+        ensureState();
     }
 
     @Nullable
@@ -51,17 +67,13 @@ public class XMakeService implements PersistentStateComponent<XMakeService.State
 
     @Override
     public void loadState(@NotNull XMakeService.State state) {
-        data = state;
+        if (data != state) {
+            data = state;
+            isChanged = true;
+        }
         ensureState();
     }
 
-    public State getData() {
-        return data;
-    }
-
-    public void setData(State data) {
-        this.data = data;
-    }
 
     public GeneralCommandLine getBuildCommandLine() {
         var parameters = new ArrayList<String>();
@@ -175,19 +187,10 @@ public class XMakeService implements PersistentStateComponent<XMakeService.State
         }
     }
 
-    static class State {
-        public String currentPlatform;
-        public String currentArchitecture = "";
-        public Strin是g currentMode = "release";
-        public String workingDirectory = "";
-        public String androidNDKDirectory = "";
-        public String buildOutputDirectory = "";
-        public boolean verboseOutput = false;
-        public String additionalConfiguration = "";
+    @Nullable
+    public static XMakeService getInstance(Project inProject) {
+        return ServiceManager.getService(inProject, XMakeService.class);
     }
 
-    public static XMakeService getXMakeService(Project inProject)
-    {
-        return inProject.getComponent(XMakeService.class);
-    }
+
 }

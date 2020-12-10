@@ -7,7 +7,6 @@ import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
-import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import service.XMakeService;
@@ -25,9 +24,10 @@ public class XMakeRunConfiguration extends RunConfigurationBase {
     protected XMakeRunConfiguration(Project inProject, ConfigurationFactory factory, String name) {
         super(inProject, factory, name);
         // Init class field
-        runTarget = "Default";
+        runTarget = "default";
         runArguments = "";
         project = inProject;
+        runEnvironment = EnvironmentVariablesData.DEFAULT;
     }
 
     public GeneralCommandLine getRunCommandLine() {
@@ -43,7 +43,7 @@ public class XMakeRunConfiguration extends RunConfigurationBase {
             parameters.addAll(Arrays.asList(arguments));
         }
 
-        return XMakeService.getXMakeService(project).makeCommandLine(parameters);
+        return XMakeService.getInstance(project).makeCommandLine(parameters);
     }
 
     @NotNull
