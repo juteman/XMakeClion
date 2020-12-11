@@ -1,10 +1,9 @@
 package xmakeUtils;
 
 
+import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.process.ProcessAdapter;
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.process.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.diagnostic.Logger;
@@ -23,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class XMakeUtils {
@@ -73,11 +73,6 @@ public class XMakeUtils {
         return xmakeProgram;
     }
 
-    public void setXmakeProgram(String inXMakeProgram) {
-        xmakeProgram = inXMakeProgram;
-    }
-
-
     public static String getPlatform() {
         if (SystemInfo.isWindows) {
             return "windows";
@@ -114,10 +109,13 @@ public class XMakeUtils {
         return code;
     }
 
-
-
-
-
+    /**
+     * run command get result
+     *
+     * @param argv             command line
+     * @param workingDirectory run command line directory
+     * @return return command line result
+     */
     public static String runCommandResult(@NotNull List<String> argv, @Nullable String workingDirectory) {
         BufferedReader bufferedReader = null;
         StringBuilder result = new StringBuilder();
@@ -157,4 +155,47 @@ public class XMakeUtils {
         return result.toString();
     }
 
+    public void setXmakeProgram(String inXMakeProgram) {
+        xmakeProgram = inXMakeProgram;
+    }
+
+
+    /**
+     * run command in idea console
+     *
+     * @param project      current project
+     * @param commandLine  command line to run
+     * @param showConsole  if show console when run
+     * @param showProblem  if show problem when run
+     * @param showExitCode if show exit state code
+     * @return xmake console handler
+     */
+    public ProcessHandler runInConsole(Project project, GeneralCommandLine commandLine, Boolean showConsole, Boolean showProblem, Boolean showExitCode) {
+        try {
+            var handler = new XMakeConsoleHandler(XMakeToolWindowFactory.getXMakeConsoleView(project), commandLine, showExitCode);
+            // if show console, make tool window show
+            if (showConsole) {
+                XMakeToolWindowFactory.getXMakeToolWindow(project).show(new Runnable() {
+                    @Override
+                    public void run() {
+                        Objects.requireNonNull(XMakeToolWindowFactory.getXMakeToolWindowOutputPanel(project)).showPanel();
+                    }
+                });
+            }
+
+            if (showProblem) {
+                // set XMake problem process adapter to listen
+                // TODO implement XMakeProblemProcessAdapter
+                handler.addProcessListener(new XMakeProblemProcessAdapter(handler, project));
+            }
+
+            handler.startNotify();
+
+            return handler;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

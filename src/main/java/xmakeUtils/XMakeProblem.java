@@ -1,11 +1,21 @@
 package xmakeUtils;
 
 public class XMakeProblem {
-    private String file = null;
-    private String line = "0";
-    private String column = "0";
-    private String kind = "error";
-    private String message = "";
+    private String file;
+    private String line;
+    private String column;
+    private String kind;
+    private String message;
+
+    public XMakeProblem(String file, String line, String column, String kind, String message)
+    {
+        this.file = file;
+        this.line = line;
+        this.column = column;
+        this.kind = kind;
+        this.message = message;
+    }
+
 
     public String getFile() {
         return file;

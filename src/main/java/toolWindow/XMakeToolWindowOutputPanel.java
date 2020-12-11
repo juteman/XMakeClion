@@ -7,15 +7,22 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
+import com.intellij.ui.content.ContentManager;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+import java.util.Objects;
 
 public class XMakeToolWindowOutputPanel extends SimpleToolWindowPanel{
 
     private final ActionToolbar actionToolbar;
     private final ConsoleView consoleView;
+    private Project project;
 
     public XMakeToolWindowOutputPanel(Project project) {
         super(false);
+
+        this.project = project;
         // Use ActionManager Create action toolbar by action group
         var _actionManager = ActionManager.getInstance();
         actionToolbar = _actionManager.createActionToolbar("XMake ToolBar", (ActionGroup) _actionManager.getAction("XMake.Menu"), false);
@@ -29,6 +36,12 @@ public class XMakeToolWindowOutputPanel extends SimpleToolWindowPanel{
         setToolbar(actionToolbar.getComponent());
         actionToolbar.setTargetComponent(this);
         setContent(consoleView.getComponent());
+    }
+
+    public void showPanel()
+    {
+        ContentManager contentManager = XMakeToolWindowFactory.getXMakeToolWindow(project).getContentManager();
+        contentManager.setSelectedContent(Objects.requireNonNull(contentManager.getContent(0)));
     }
 
     @NotNull
