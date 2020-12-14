@@ -17,8 +17,8 @@ A XMake integration plugin in Intellij Platform<br>
         </ul>
         <li>Quickstart</li>
         <li>Create Factory</li>
-        <li>Project configuration</li>
-        <li>Run configuration</li>
+        <li>Project github.juteman.configuration</li>
+        <li>Run github.juteman.configuration</li>
         <li>Menu tools</li>
         <li>Tool windows</li>
         <li>Build and run</li>
@@ -33,15 +33,15 @@ A XMake integration plugin in Intellij Platform<br>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <projectService serviceImplementation="service.XMakeService"/>
-        <toolWindow id="XMake" icon="XMakeIcons.xmake" factoryClass="toolWindow.XMakeToolWindowFactory"/>
-        <configurationType implementation="configuration.XMakeRunConfigurationType"/>
+        <projectService serviceImplementation="github.juteman.xmake.service.XMakeService"/>
+        <toolWindow id="XMake" anchor="bottom" icon="XMakeIcons.xmake" factoryClass="github.juteman.xmake.toolWindow.XMakeToolWindowFactory"/>
+        <configurationType implementation="github.juteman.xmake.configuration.XMakeRunConfigurationType"/>
     </extensions>
 
     <actions>
         <group id="XMake.Menu" text="XMake" popup="true" description="XMake menu">
             <add-to-group group-id="MainMenu" anchor="after" relative-to-action="RunMenu"/>
-            <action id="XMake.Build" class="action.BuildAction" text="Build Project" icon="ActionIcons.build"
+            <action id="XMake.Build" class="github.juteman.xmake.action.BuildAction" text="Build Project" icon="ActionIcons.build"
                     description="Build the current project."/>
         </group>
     </actions>
